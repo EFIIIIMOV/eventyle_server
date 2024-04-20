@@ -4,6 +4,10 @@ import os
 import sys
 
 
+# eventyle_server % python manage.py runserver
+# python manage.py startapp event_app
+
+
 def main():
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eventyle_server.settings')
