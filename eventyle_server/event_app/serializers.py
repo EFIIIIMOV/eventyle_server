@@ -4,7 +4,7 @@ from .models import Event
 
 
 class EventSerializer(ModelSerializer):
-    date = serializers.DateField(format='%d.%m.%Y')
+    date = serializers.DateField()
 
     class Meta:
         model = Event
