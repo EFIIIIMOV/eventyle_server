@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
-from .models import Event
+from .models import Event, EventInfo
 
 
 class EventSerializer(ModelSerializer):
@@ -8,4 +8,10 @@ class EventSerializer(ModelSerializer):
 
     class Meta:
         model = Event
+        fields = '__all__'
+
+
+class EventInfoSerializer(ModelSerializer):
+    class Meta:
+        model = EventInfo
         fields = '__all__'
