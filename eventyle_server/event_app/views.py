@@ -44,3 +44,10 @@ def getAllEventInfoByEventID(request, event_id):
     eventsInfo = models.EventInfo.objects.filter(event_id=event_id)
     serializer = serializers.EventInfoSerializer(eventsInfo, many=True)
     return Response({'eventInfo': serializer.data})
+
+
+@api_view(['POST'])
+def createEventInfo(request):
+    eventInfo = models.EventInfo.objects.create(**request.data)
+    serializer = serializers.EventInfoSerializer(eventInfo, many=False)
+    return Response(serializer.data)

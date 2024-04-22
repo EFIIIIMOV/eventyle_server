@@ -9,4 +9,5 @@ urlpatterns = [
     path('info/', views.getAllEventsInfo),
     path('info/info_id/<str:info_id>/', views.getEventInfoByID),
     path('info/event_id/<str:event_id>/', views.getAllEventInfoByEventID),
+    path('info/create/', views.createEventInfo),
 ]
