@@ -1,5 +1,5 @@
 import base64
-
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -69,9 +69,6 @@ def getAllEventImage(request):
 #     serializer = serializers.EventImageSerializer(eventsImage, many=False)
 #     return Response({'eventImage': serializer.data})
 
-from django.http import HttpResponse
-from django.core.exceptions import ObjectDoesNotExist
-
 @api_view(['GET'])
 def getEventImageByID(request, image_id):
     try:
@@ -83,4 +80,3 @@ def getEventImageByID(request, image_id):
         return HttpResponse("File not found", status=404)
     except Exception as e:
         return HttpResponse("An error occurred: {}".format(str(e)), status=500)
-
