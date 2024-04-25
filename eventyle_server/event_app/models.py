@@ -26,3 +26,11 @@ class EventInfo(models.Model):
 
     class Meta:
         db_table = 'event_info'
+
+
+class EventImage(models.Model):
+    _id = models.TextField(primary_key=True)
+    image = models.BinaryField()
+
+    class Meta:
+        db_table = 'event_image'

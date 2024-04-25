@@ -1,3 +1,6 @@
+import base64
+
+from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from . import models
@@ -51,3 +54,33 @@ def createEventInfo(request):
     eventInfo = models.EventInfo.objects.create(**request.data)
     serializer = serializers.EventInfoSerializer(eventInfo, many=False)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+def getAllEventImage(request):
+    eventsImage = models.EventImage.objects.using('mongo_db').all()
+    serializer = serializers.EventImageSerializer(eventsImage, many=True)
+    return Response({'eventImage': serializer.data})
+
+
+# @api_view(['GET'])
+# def getEventImageByID(request, image_id):
+#     eventsImage = models.EventImage.objects.using('mongo_db').get(_id=image_id)
+#     serializer = serializers.EventImageSerializer(eventsImage, many=False)
+#     return Response({'eventImage': serializer.data})
+
+from django.http import HttpResponse
+from django.core.exceptions import ObjectDoesNotExist
+
+@api_view(['GET'])
+def getEventImageByID(request, image_id):
+    try:
+        eventsImage = models.EventImage.objects.using('mongo_db').get(_id=image_id)
+        serializer = serializers.EventImageSerializer(eventsImage, many=False)
+        image_binary = base64.b64decode(serializer.data['image'])
+        return HttpResponse(image_binary, content_type="image/jpeg")
+    except ObjectDoesNotExist:
+        return HttpResponse("File not found", status=404)
+    except Exception as e:
+        return HttpResponse("An error occurred: {}".format(str(e)), status=500)
+

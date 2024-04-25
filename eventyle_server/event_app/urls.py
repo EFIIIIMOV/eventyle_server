@@ -4,6 +4,8 @@ from . import views
 
 urlpatterns = [
     path('', views.getAllEvents),
+    path('image/', views.getAllEventImage),
+    path('image/image_id/<str:image_id>', views.getEventImageByID),
     path('event_id/<str:event_id>/', views.getEventByID),
     path('create/', views.createEvent),
     path('info/', views.getAllEventsInfo),

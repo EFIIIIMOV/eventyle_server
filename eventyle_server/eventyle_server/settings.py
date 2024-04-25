@@ -82,6 +82,13 @@ DATABASES = {
         'PASSWORD': '35723572',
         'PORT': 3306,
         'HOST': '127.0.0.1'
+    },
+    'mongo_db': {
+        'ENGINE': 'djongo',
+        'NAME': 'eventyle_app_mongoDB',
+        'CLIENT': {
+            'host': 'mongodb://localhost:27017',
+        }
     }
 }
 
