@@ -9,27 +9,27 @@ from event_app import serializers
 
 @api_view(['GET'])
 def getAllEventsInfo(request):
-    eventsInfo = models.EventInfo.objects.all()
+    eventsInfo = models.EventInfo.objects.using('mysql').all()
     serializer = serializers.EventInfoSerializer(eventsInfo, many=True)
     return Response({'eventInfo': serializer.data})
 
 
 @api_view(['GET'])
 def getEventInfoByID(request, info_id):
-    eventInfo = models.EventInfo.objects.get(info_id=info_id)
+    eventInfo = models.EventInfo.objects.using('mysql').get(info_id=info_id)
     serializer = serializers.EventInfoSerializer(eventInfo, many=False)
     return Response({'event': serializer.data})
 
 
 @api_view(['GET'])
 def getAllEventInfoByEventID(request, event_id):
-    eventsInfo = models.EventInfo.objects.filter(event_id=event_id)
+    eventsInfo = models.EventInfo.objects.using('mysql').filter(event_id=event_id)
     serializer = serializers.EventInfoSerializer(eventsInfo, many=True)
     return Response({'eventInfo': serializer.data})
 
 
 @api_view(['POST'])
 def createEventInfo(request):
-    eventInfo = models.EventInfo.objects.create(**request.data)
+    eventInfo = models.EventInfo.objects.using('mysql').create(**request.data)
     serializer = serializers.EventInfoSerializer(eventInfo, many=False)
     return Response(serializer.data)
