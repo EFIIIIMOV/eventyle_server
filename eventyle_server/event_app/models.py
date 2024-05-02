@@ -34,3 +34,14 @@ class EventImage(models.Model):
 
     class Meta:
         db_table = 'event_image'
+
+
+class UserEvent(models.Model):
+    user_id = models.UUIDField()
+    event_id = models.UUIDField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user_id', 'event_id'], name='user_event_unique_constraint')
+        ]
+        db_table = 'user_event'
