@@ -42,3 +42,28 @@ class EventyleUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class UserProfileInfo(models.Model):
+    user_id = models.UUIDField(primary_key=True, editable=False)
+    role = models.TextField()
+    name = models.TextField()
+    surname = models.TextField()
+    description = models.TextField()
+
+    def __str__(self):
+        return self.user_id[0:50]
+
+    class Meta:
+        db_table = 'user'
+
+
+class UserProfileImage(models.Model):
+    _id = models.TextField(primary_key=True)
+    image = models.BinaryField()
+
+    def __str__(self):
+        return self._id[0:50]
+
+    class Meta:
+        db_table = 'user_image'
