@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'event_app.apps.EventAppConfig',
     'auth_app.apps.AuthAppConfig',
+    'user_app.apps.UserAppConfig',
 ]
 
 MIDDLEWARE = [
