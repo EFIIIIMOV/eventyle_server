@@ -1,5 +1,7 @@
 import base64
 from django.core.exceptions import ObjectDoesNotExist
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -8,6 +10,7 @@ from event_app import serializers
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def getAllEventImage(request):
     eventsImage = models.EventImage.objects.using('mongo_db').all()
     serializer = serializers.EventImageSerializer(eventsImage, many=True)
@@ -15,6 +18,7 @@ def getAllEventImage(request):
 
 
 @api_view(['GET'])
+#@permission_classes([IsAuthenticated])
 def getEventImageByID(request, image_id):
     try:
         eventsImage = models.EventImage.objects.using('mongo_db').get(_id=image_id)
@@ -28,6 +32,7 @@ def getEventImageByID(request, image_id):
 
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def addEventImage(request):
     try:
         image_id = request.data.get('image_id')

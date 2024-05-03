@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.db import transaction
 from rest_framework import status
 from . import models
 import base64
@@ -9,31 +10,39 @@ from . import serializers
 
 @api_view(['POST'])
 def createUser(request):
-    requestData = request.data
     try:
-        if not all(
-                key in requestData for key in ['user_id', 'email', 'password', 'role', 'name', 'surname', 'aboutUser']):
+        data = request.data
+        required_keys = ['user_id', 'email', 'password', 'role', 'name', 'surname', 'aboutUser']
+        if not all(key in data for key in required_keys):
             return Response({'error': 'Не все необходимые данные предоставлены'}, status=400)
 
-        models.EventyleUser.objects.create_user(id=requestData.get('user_id'),
-                                                email=requestData.get('email'),
-                                                password=requestData.get('password'))
+        with transaction.atomic():
+            userAuthInfo = models.EventyleUser.objects.create_user(
+                id=data['user_id'],
+                email=data['email'],
+                password=data['password']
+            )
 
-        userProfileInfo = models.UserProfileInfo(
-            user_id=requestData.get('user_id'),
-            role=requestData.get('role'),
-            name=requestData.get('name'),
-            surname=requestData.get('surname'),
-            description=requestData.get('aboutUser')
-        )
-        userProfileInfo.save(using='mysql')
+            userProfileInfo = models.UserProfileInfo.objects.using('mysql').create(
+                user_id=data['user_id'],
+                role=data['role'],
+                name=data['name'],
+                surname=data['surname'],
+                description=data['aboutUser'],
+            )
 
-        if requestData.get('image') != '':
-            image_binary = base64.b64decode(requestData.get('image'))
-            userProfileImage = models.UserProfileImage(_id=requestData.get('user_id'),
-                                                       image=image_binary)
-            userProfileImage.save(using='mongo_db')
+            if data.get('image') != '':
+                userImageInfo = models.UserProfileImage.objects.using('mongo_db').create(
+                    _id=data['user_id'],
+                    image=base64.b64decode(data['image']),
+                )
 
         return Response({'User create successfully'}, status=200)
     except Exception as e:
-        return Response({'error': str(e)}, status=500)
+        try:
+            userAuthInfo.delete()
+            userProfileInfo.delete()
+            userImageInfo.delete()
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)
+    return Response({'error': str(e)}, status=500)
