@@ -9,7 +9,9 @@ from rest_framework.response import Response
 from django.db.models import Q
 from auth_app import serializers
 from auth_app import models
-#from . import serializers
+
+
+# from . import serializers
 
 
 @api_view(['GET'])
@@ -30,6 +32,7 @@ def getProfileInfo(request):
     profileInfo = models.UserProfileInfo.objects.using('mysql').get(user_id=user_id)
     serializer = serializers.UserProfileInfoSerializer(profileInfo, many=False)
     return Response({'profileInfo': serializer.data})
+
 
 
 @api_view(['GET'])
