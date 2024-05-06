@@ -45,3 +45,13 @@ def createEvent(request):
 
     userEventSerializer = serializers.UserEventSerializer(userEvent, many=False)
     return Response({'event': eventSerializer.data, 'eventUser': userEventSerializer.data})
+
+
+@api_view(['POST'])
+#@permission_classes([IsAuthenticated])
+def addUserToEvent(request):
+    event_id = request.data.get('event_id')
+    user_ids = request.data.get('user_ids', [])
+    for user_id in user_ids:
+        models.UserEvent.objects.using('mysql').create(user_id=user_id, event_id=event_id)
+    return Response({'message': 'Users added to event successfully'})
