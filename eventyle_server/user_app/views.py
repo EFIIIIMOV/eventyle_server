@@ -7,13 +7,14 @@ from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Q
+from . import swagger_docs
 from auth_app import serializers
 from auth_app import models
 
 
 # from . import serializers
 
-
+@swagger_docs.get_searching_user_profile_swagger_docs()
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getUsersInfo(request):
@@ -25,6 +26,7 @@ def getUsersInfo(request):
     return Response({'users': serializers.UserProfileInfoSerializer(users, many=True).data})
 
 
+@swagger_docs.get_user_profile_info_swagger_docs()
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getProfileInfo(request):
@@ -34,7 +36,7 @@ def getProfileInfo(request):
     return Response({'profileInfo': serializer.data})
 
 
-
+@swagger_docs.get_user_profile_image_swagger_docs()
 @api_view(['GET'])
 # @permission_classes([IsAuthenticated])
 def getUserImage(request):

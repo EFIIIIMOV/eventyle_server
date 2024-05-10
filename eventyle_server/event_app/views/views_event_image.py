@@ -1,26 +1,21 @@
 import base64
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from event_app import swagger_docs
 from event_app import models
 from event_app import serializers
 
 
+@swagger_docs.get_event_image_swagger_docs()
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def getAllEventImage(request):
-    eventsImage = models.EventImage.objects.using('mongo_db').all()
-    serializer = serializers.EventImageSerializer(eventsImage, many=True)
-    return Response({'eventImage': serializer.data})
-
-
-@api_view(['GET'])
-#@permission_classes([IsAuthenticated])
-def getEventImageByID(request, image_id):
+# @permission_classes([IsAuthenticated])
+def getEventImageByID(request):
     try:
+        image_id = request.GET.get('image_id', '')
         eventsImage = models.EventImage.objects.using('mongo_db').get(_id=image_id)
         serializer = serializers.EventImageSerializer(eventsImage, many=False)
         image_binary = base64.b64decode(serializer.data['image'])
@@ -31,6 +26,7 @@ def getEventImageByID(request, image_id):
         return HttpResponse("An error occurred: {}".format(str(e)), status=500)
 
 
+@swagger_docs.post_new_event_image_swagger_docs()
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def addEventImage(request):

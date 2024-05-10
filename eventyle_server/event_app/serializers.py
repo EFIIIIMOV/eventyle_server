@@ -5,6 +5,7 @@ from .models import Event, EventInfo, EventImage, UserEvent
 
 class EventSerializer(ModelSerializer):
     date = serializers.DateField()
+    event_id = serializers.UUIDField()
 
     class Meta:
         model = Event
@@ -12,6 +13,8 @@ class EventSerializer(ModelSerializer):
 
 
 class EventInfoSerializer(ModelSerializer):
+    info_id = serializers.UUIDField()
+    event_id = serializers.UUIDField()
     class Meta:
         model = EventInfo
         fields = '__all__'

@@ -1,4 +1,6 @@
 from django.contrib.auth.models import User
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db import transaction
@@ -8,6 +10,24 @@ import base64
 from . import serializers
 
 
+@swagger_auto_schema(
+    methods=['post'],
+    operation_summary="Регистрирует нового пользователя",
+    operation_description="Данный эндпоинт создает новую запись о пользователе в auth_DB info_DB image_DB",
+    responses={200: "OK"},
+    request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'user_id': openapi.Schema(type=openapi.TYPE_STRING),
+            'email': openapi.Schema(type=openapi.TYPE_STRING),
+            'password': openapi.Schema(type=openapi.TYPE_STRING),
+            'role': openapi.Schema(type=openapi.TYPE_STRING),
+            'name': openapi.Schema(type=openapi.TYPE_STRING),
+            'surname': openapi.Schema(type=openapi.TYPE_STRING),
+            'aboutUser': openapi.Schema(type=openapi.TYPE_STRING),
+        }
+    )
+)
 @api_view(['POST'])
 def createUser(request):
     try:

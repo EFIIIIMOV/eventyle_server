@@ -8,9 +8,3 @@ urlpatterns = [
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('create/', views.createUser),
 ]
-
-# {
-#     "id": "df68eb1fc76046d2a5666f836729a06e"
-#     "email": "test@yandex.ru",
-#     "password": "1111"
-# }

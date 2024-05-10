@@ -37,7 +37,7 @@ class EventImage(models.Model):
 
 
 class UserEvent(models.Model):
-    user_id = models.UUIDField()
+    user_id = models.UUIDField(primary_key=True)
     event_id = models.UUIDField()
 
     class Meta:
