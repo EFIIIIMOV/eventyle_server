@@ -3,6 +3,15 @@ from drf_yasg import openapi
 from . import serializers
 
 
+def get_all_users_swagger_docs():
+    return swagger_auto_schema(
+        methods=['get'],
+        operation_summary="Возвращает информацию о всех пользователях системы пользователе",
+        operation_description="Данный эндпоинт возвращает информацию о о всех пользователях системы пользователе",
+        responses={200: "OK"},
+    )
+
+
 def get_user_profile_info_swagger_docs():
     return swagger_auto_schema(
         methods=['get'],

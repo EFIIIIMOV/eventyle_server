@@ -11,7 +11,7 @@ from event_app import serializers
 
 @swagger_docs.get_all_info_swagger_docs()
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def getAllEventsInfo(request):
     eventsInfo = models.EventInfo.objects.using('mysql').all()
     serializer = serializers.EventInfoSerializer(eventsInfo, many=True)

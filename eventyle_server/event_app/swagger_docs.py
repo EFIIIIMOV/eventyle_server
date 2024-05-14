@@ -7,8 +7,7 @@ def get_all_event_swagger_docs():
     return swagger_auto_schema(
         methods=['get'],
         operation_summary="Возвращает список всех мероприятий",
-        operation_description="Данный эндпоинт возвращает список всех мероприятий хранящихся в БД"
-                              "хранящиеся в БД",
+        operation_description="Данный эндпоинт возвращает список всех мероприятий хранящихся в БД",
         responses={200: "OK"},
     )
 

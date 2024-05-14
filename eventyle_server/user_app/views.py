@@ -12,7 +12,13 @@ from auth_app import serializers
 from auth_app import models
 
 
-# from . import serializers
+@swagger_docs.get_all_users_swagger_docs()
+@api_view(['GET'])
+def GetAllUser(requests):
+    users = models.UserProfileInfo.objects.using('mysql').all()
+    serializer = serializers.UserProfileInfoSerializer(users, many=True)
+    return Response({'users': serializer.data})
+
 
 @swagger_docs.get_searching_user_profile_swagger_docs()
 @api_view(['GET'])

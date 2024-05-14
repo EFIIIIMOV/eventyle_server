@@ -10,7 +10,7 @@ from event_app import serializers
 
 @swagger_docs.get_all_event_swagger_docs()
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def getAllEvents(request):
     events = models.Event.objects.all().using('mysql').order_by('date')
     serializer = serializers.EventSerializer(events, many=True)
