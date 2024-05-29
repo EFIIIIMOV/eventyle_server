@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'event_app.apps.EventAppConfig',
     'auth_app.apps.AuthAppConfig',
     'user_app.apps.UserAppConfig',
+    'chat_app.apps.ChatAppConfig',
 ]
 
 MIDDLEWARE = [
