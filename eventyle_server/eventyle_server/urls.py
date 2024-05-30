@@ -29,3 +29,7 @@ urlpatterns = [
     path('user/', include('user_app.urls')),
     path('chats/', include('chat_app.urls')),
 ]
+
+websocket_urlpatterns = [
+    re_path('', include('chat_app.routs'))
+]

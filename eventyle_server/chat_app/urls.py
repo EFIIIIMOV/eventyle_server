@@ -8,5 +8,3 @@ urlpatterns = [
     path('image/', views.getChatImageByID),
     path('add_image/', views.addChatImage),
 ]
-
-

@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'drf_yasg',
-
+    'channels',
     'rest_framework',
 
     'event_app.apps.EventAppConfig',
@@ -48,6 +48,18 @@ INSTALLED_APPS = [
     'user_app.apps.UserAppConfig',
     'chat_app.apps.ChatAppConfig',
 ]
+
+ASGI_APPLICATION = 'eventyle_server.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
