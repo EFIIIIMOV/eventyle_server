@@ -7,4 +7,6 @@ urlpatterns = [
     path('add_user/', views.addUserToChat),
     path('image/', views.getChatImageByID),
     path('add_image/', views.addChatImage),
+    path('message/', views.getAllChatMessages),
+    path('message/create/', views.createMessage),
 ]

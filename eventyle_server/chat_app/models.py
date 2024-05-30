@@ -30,3 +30,18 @@ class UserChat(models.Model):
             models.UniqueConstraint(fields=['user_id', 'chat_id'], name='user_chat_unique_constraint')
         ]
         db_table = 'user_chat'
+
+
+class Message(models.Model):
+    message_id = models.UUIDField(primary_key=True)
+    chat_id = models.UUIDField()
+    user_id = models.UUIDField()
+    message_text = models.TextField()
+    create_time = models.DateTimeField()
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['message_id', 'chat_id', 'user_id'],
+                                    name='message_chat_user_unique_constraint')
+        ]
+        db_table = 'message'

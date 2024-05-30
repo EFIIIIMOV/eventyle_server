@@ -71,3 +71,20 @@ def addChatImage(request):
         return HttpResponse("Image uploaded successfully", status=200)
     except Exception as e:
         return Response({"error": str(e)}, status=500)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAllChatMessages(request):
+    chat_id = request.GET.get('chat_id', '')
+    messages = models.Message.objects.filter(chat_id=chat_id).using('mysql')
+    serializer = serializers.MessageSerializer(messages, many=True)
+    return Response({'messages': serializer.data})
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createMessage(request):
+    message = models.Message.objects.using('mysql').create(**request.data)
+    serializer = serializers.MessageSerializer(message, many=False)
+    return Response(serializer.data)
