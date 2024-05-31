@@ -1,5 +1,6 @@
 from datetime import datetime
-
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import base64
 from django.core.exceptions import ObjectDoesNotExist
@@ -88,7 +89,7 @@ def getAllChatMessages(request):
 
 
 @api_view(['GET'])
-# @permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated])
 def getAllChatUsers(request):
     chat_id = request.GET.get('chat_id', '')
     chat_users = models.UserChat.objects.filter(chat_id=chat_id).values('user_id')
@@ -111,4 +112,14 @@ def createMessage(request):
         create_time=create_time,
     )
     serializer = serializers.MessageSerializer(message, many=False)
+
+    # channel_layer = get_channel_layer()
+    # async_to_sync(channel_layer.group_send)(
+    #     f'chat_{requestData["chat_id"]}',
+    #     {
+    #         'type': 'chat_message',
+    #         'message': serializer.data
+    #     }
+    # )
+
     return Response(serializer.data)

@@ -5,6 +5,7 @@ from django.core.asgi import get_asgi_application
 
 from chat_app import routs
 
+#redis-server &
 #daphne -b 0.0.0.0 -p 8080 eventyle_server.asgi:application
 
 
