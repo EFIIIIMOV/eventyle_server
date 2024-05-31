@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework_simplejwt.authentication import JWTAuthentication
 import base64
 from django.core.exceptions import ObjectDoesNotExist
@@ -6,8 +8,11 @@ from rest_framework.permissions import IsAuthenticated
 from django.http import HttpResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.utils import timezone
 from . import models
 from . import serializers
+from auth_app.models import UserProfileInfo
+from auth_app.serializers import UserProfileInfoSerializer
 
 
 @api_view(['GET'])
@@ -77,14 +82,33 @@ def addChatImage(request):
 @permission_classes([IsAuthenticated])
 def getAllChatMessages(request):
     chat_id = request.GET.get('chat_id', '')
-    messages = models.Message.objects.filter(chat_id=chat_id).using('mysql')
+    messages = models.Message.objects.filter(chat_id=chat_id).using('mysql').order_by('create_time')
     serializer = serializers.MessageSerializer(messages, many=True)
     return Response({'messages': serializer.data})
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getAllChatUsers(request):
+    chat_id = request.GET.get('chat_id', '')
+    chat_users = models.UserChat.objects.filter(chat_id=chat_id).values('user_id')
+    users = UserProfileInfo.objects.filter(user_id__in=chat_users).using('mysql')
+    serializer = UserProfileInfoSerializer(users, many=True)
+    return Response({'users': serializer.data})
 
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createMessage(request):
-    message = models.Message.objects.using('mysql').create(**request.data)
+    requestData = request.data;
+    user_id = JWTAuthentication().authenticate(request)[0].id
+    create_time = timezone.make_aware(datetime.strptime(requestData['date'], '%Y-%m-%d %H:%M:%S'))
+    message = models.Message.objects.using('mysql').create(
+        message_id=requestData['message_id'],
+        chat_id=requestData['chat_id'],
+        user_id=user_id,
+        message_text=requestData['messageText'],
+        create_time=create_time,
+    )
     serializer = serializers.MessageSerializer(message, many=False)
     return Response(serializer.data)
