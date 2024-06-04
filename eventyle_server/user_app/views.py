@@ -89,3 +89,37 @@ def addPostImage(request):
         post_image.save(using='mongo_db')
 
     return HttpResponse("Image uploaded successfully", status=200)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def getAllPostByUserID(request):
+    user_id = request.GET.get('user_id', '')
+    posts = models.ProfilePost.objects.using('mysql').filter(user_id=user_id)
+    serializerPost = serializers.ProfilePostSerializer(posts, many=True)
+    posts = []
+    for post in serializerPost.data:
+        postImages = models.PostImage.objects.using('mysql').filter(post_id=post['post_id'])
+        image_ids = [image.image_id for image in postImages]
+        posts.append(models.ProfilePostImageForClient(post_id=post['post_id'],
+                                                      user_id=post['user_id'],
+                                                      post_text=post['post_text'],
+                                                      images=image_ids))
+
+    serializer = serializers.ProfilePostImageForClientSerializer(posts, many=True)
+    return Response({'posts': serializer.data})
+
+
+@api_view(['GET'])
+# @permission_classes([IsAuthenticated])
+def getEventImageByID(request):
+    try:
+        image_id = request.GET.get('image_id', '')
+        postImage = models.ProfilePostImage.objects.using('mongo_db').get(_id=image_id)
+        serializer = serializers.ProfilePostImageSerializer(postImage, many=False)
+        image_binary = base64.b64decode(serializer.data['image'])
+        return HttpResponse(image_binary, content_type="image/jpeg")
+    except ObjectDoesNotExist:
+        return HttpResponse("File not found", status=404)
+    except Exception as e:
+        return HttpResponse("An error occurred: {}".format(str(e)), status=500)

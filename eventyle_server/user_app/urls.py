@@ -8,4 +8,6 @@ urlpatterns = [
     path('profile/image/', views.getUserImage),
     path('profile/post/create/', views.createPost),
     path('profile/post/add_image/', views.addPostImage),
+    path('profile/post/', views.getAllPostByUserID),
+    path('profile/post/image/', views.getEventImageByID),
 ]

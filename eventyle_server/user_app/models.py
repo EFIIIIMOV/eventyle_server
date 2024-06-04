@@ -35,3 +35,11 @@ class ProfilePostImage(models.Model):
 
     class Meta:
         db_table = 'post_img'
+
+
+class ProfilePostImageForClient(object):
+    def __init__(self, post_id, user_id, post_text, images):
+        self.post_id = post_id
+        self.user_id = user_id
+        self.post_text = post_text
+        self.images = images
